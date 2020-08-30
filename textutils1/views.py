@@ -2,10 +2,8 @@
 from django.http import HttpResponse
 from django.shortcuts import render
 
-
 def index(request):
     return render(request, 'index.html')
-
 
 def analyze(request):
     # Get the text
@@ -17,6 +15,7 @@ def analyze(request):
     fullcaps = request.POST.get('fullcaps', 'off')
     newlineremover = request.POST.get('newlineremover', 'off')
     extraspaceremover = request.POST.get('extraspaceremover', 'off')
+    countchar = request.POST.get('countchar','off')
 
     # Check which checkbox is on
     if removepunc == "on":
@@ -37,13 +36,18 @@ def analyze(request):
         params = {'purpose': 'Changed to Uppercase', 'analyzed_text': analyzed}
         djtext = analyzed
 
-    if(extraspaceremover=="on"):
+    if (extraspaceremover == "on"):
         analyzed = ""
         for index, char in enumerate(djtext):
-            if not(djtext[index] == " " and djtext[index+1]==" "):
+            # It is for if a extraspace is in the last of the string
+            if char == djtext[-1]:
+                if not (djtext[index] == " "):
+                    analyzed = analyzed + char
+
+            elif not (djtext[index] == " " and djtext[index + 1] == " "):
                 analyzed = analyzed + char
 
-        params = {'purpose': 'Removed NewLines', 'analyzed_text': analyzed}
+        params = {'purpose': 'Remove Extra Space', 'analyzed_text': analyzed}
         djtext = analyzed
 
     if (newlineremover == "on"):
@@ -51,9 +55,17 @@ def analyze(request):
         for char in djtext:
             if char != "\n" and char!="\r":
                 analyzed = analyzed + char
-        params = {'purpose': 'Removed NewLines', 'analyzed_text': analyzed}
+        params = {'purpose': 'Remove New Lines', 'analyzed_text': analyzed}
 
-    if(removepunc != "on" and newlineremover!="on" and extraspaceremover!="on" and fullcaps!="on"):
+    if (countchar == "on"):
+        analyzed,count = "",0
+
+        for  char in djtext:
+            count = count + 1
+        params = {'purpose': 'Character Count', 'analyzed_text': count}
+        djtext = analyzed
+
+    if(removepunc != "on" and newlineremover!="on" and extraspaceremover!="on" and fullcaps!="on" and countchar!="on"):
         return HttpResponse("please select any operation and try again")
 
     return render(request, 'analyze.html', params)
