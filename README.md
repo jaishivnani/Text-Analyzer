@@ -7,5 +7,5 @@ Features
 1.Remove Punctuations
 2.UPPERCASE
 3.Extra space remover
-4.New Line Remover
+4.New Line Removerfasfd
 5.Character Count
