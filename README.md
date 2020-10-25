@@ -9,8 +9,10 @@ Features
 
 2.UPPERCASE
 
-3.Extra space remover
+3.New Line Remover
 
-4.New Line Remover
+4.Extra space remover
 
-5.Character Count
+5.Number Remover
+
+6.Character count in built without clicking on button.
